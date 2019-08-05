@@ -1,37 +1,48 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static helpers.ConsoleHelper.*;
+
 
 public class Cafe {
-    Barmen barmen = new Barmen();
-    ConsoleHelper consoleHelper = new ConsoleHelper();
 
-    public void dialogReservTable() throws IOException {
-        consoleHelper.dialog1();
-        barmen.sayNumberTable();
-        System.out.println("Ok now we are  " + barmen.getNumberTable() + " tables");
-        System.out.println("Enter number for actions");
-        while (true) {
-            int numberTable = consoleHelper.sayNumberTable();
-            if (barmen.checkTable(numberTable)) {
-                barmen.reservTable(numberTable);
-                break;
-            } else {
-                barmen.dialog2();
-                continue;
-            }
+    static class Order {
+        double price;
+        String title;
+    }
+
+    private Map<Integer, List<Order>> cafeOrders;
+
+
+    Barmen barmen = new Barmen();
+
+    public void dialogQueryHowManyTableAreThere() throws IOException {
+        askHowManyTablesAreThere();
+
+        int numberOfTables = readNumber();
+        for (int i = 1; i <= numberOfTables; i++) {
+            cafeOrders.put(i, new ArrayList<Order>());
         }
+
+        println("Ok now we are  " + cafeOrders.size() + " tables");
     }
 
     public void dialogForOrderMenu() throws IOException {
         while (true) {
+            // which table? (table selection dialogue) // while loop
+            int currentTbale = 0;
+            // while loop for table actions
             barmen.dialogOrder();
-            String order = consoleHelper.makeOrder();
+            String order = makeOrder();
             if (barmen.checkOrder(order)) {
                 barmen.makeOrderMenu(order);
                 System.out.println("Ok, table " + barmen.getNumberTable() + " has " + order);
                 barmen.dialogOrder();
 
                 while (true) {
-                    String newOrder = consoleHelper.makeOrder();
+                    String newOrder = makeOrder();
                     if (newOrder.equals("x")) {
                         System.exit(0);
                     }
@@ -54,7 +65,7 @@ public class Cafe {
 
     public static void main(String[] args) throws IOException {
         Cafe cafe = new Cafe();
-        cafe.dialogReservTable();
+        cafe.dialogQueryHowManyTableAreThere();
         cafe.dialogForOrderMenu();
     }
 }
