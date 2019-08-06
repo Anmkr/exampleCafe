@@ -1,5 +1,8 @@
+import org.omg.PortableInterceptor.INACTIVE;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +16,7 @@ public class Cafe {
         String title;
     }
 
-    private Map<Integer, List<Order>> cafeOrders;
-
-
-    Barmen barmen = new Barmen();
+    private Map<Integer, List<Order>> cafeOrders = new HashMap<Integer, List<Order>>();
 
     public void dialogQueryHowManyTableAreThere() throws IOException {
         askHowManyTablesAreThere();
@@ -29,43 +29,37 @@ public class Cafe {
         println("Ok now we are  " + cafeOrders.size() + " tables");
     }
 
-    public void dialogForOrderMenu() throws IOException {
+    public void mainActionLoop() {
         while (true) {
-            // which table? (table selection dialogue) // while loop
-            int currentTbale = 0;
-            // while loop for table actions
-            barmen.dialogOrder();
-            String order = makeOrder();
-            if (barmen.checkOrder(order)) {
-                barmen.makeOrderMenu(order);
-                System.out.println("Ok, table " + barmen.getNumberTable() + " has " + order);
-                barmen.dialogOrder();
-
-                while (true) {
-                    String newOrder = makeOrder();
-                    if (newOrder.equals("x")) {
-                        System.exit(0);
-                    }
-                    if (newOrder.equals("p")) {
-                        barmen.printReceipt();
-                        barmen.dialogOrder();
-                        continue;
-                    }
-
-                    barmen.makeOrderMenu(newOrder);
-                }
-            } else {
-                System.out.println("Invalid format,enter in following format[Number][Space][Item name]");
-
-
+             Integer selectedTable = selectTable() ;
+            if (selectedTable == null) {
+                break;
             }
-
+            doActionOnTable(selectedTable) ;
         }
+    }
+
+    /**
+     *
+     * 1. promts for action x - clear, p - print, q - do noting,  [number] [good name] to add to table orders
+     *
+     * @param selectedTable table for which actions are done
+     */
+    private void doActionOnTable(Integer selectedTable) {
+        // TODO
+    }
+
+    /**
+     *
+     * @return table number or null if q is selected
+     */
+    private Integer selectTable() {
+        return null; // TODO
     }
 
     public static void main(String[] args) throws IOException {
         Cafe cafe = new Cafe();
         cafe.dialogQueryHowManyTableAreThere();
-        cafe.dialogForOrderMenu();
+        cafe.mainActionLoop();
     }
 }

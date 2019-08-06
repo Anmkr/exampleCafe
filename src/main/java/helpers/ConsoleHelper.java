@@ -21,19 +21,41 @@ public class ConsoleHelper {
             try {
                 number = Integer.valueOf(line);
                 break;
-            }
-            catch (NumberFormatException nfe) {
+            } catch (NumberFormatException nfe) {
                 println("Invalid number format, please enter number again.");
                 print("> ");
             }
         }
-        return  number;
+        return number;
+    }
+
+    public static Integer tableSelectionDialogue() {
+
+        println("Enter number table for action");
+        return null;
+    }
+
+    public static int selectTable(int number, int totalTables) {
+        int currentTable = 0;
+
+        currentTable = currentTable + number;
+
+            if (currentTable < 1 || currentTable > totalTables) {
+                System.out.println("There is no such table, you have only  "+totalTables);
+            } else {
+                System.out.println(" ");
+            }
+
+        return currentTable;
+
+    }
+     static  public void dialogOrder() {
+        System.out.println("Enter price follow by menu item name to add " +
+                "to table receipt, or p to print, qu to void");
     }
 
 
-    static public int sayNumberTable() throws IOException {
-        return Integer.parseInt(reader.readLine());
-    }
+
 
     static public String makeOrder() throws IOException {
         return reader.readLine();
