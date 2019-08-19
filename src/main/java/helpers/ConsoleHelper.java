@@ -13,7 +13,7 @@ public class ConsoleHelper {
         println("How many table do you have?");
     }
 
-    static public int readNumber() throws IOException {
+    public static int readNumber() throws IOException {
         int number;
         print("> ");
         while (true) {
@@ -29,47 +29,30 @@ public class ConsoleHelper {
         return number;
     }
 
-    public static Integer tableSelectionDialogue() {
+    public static void tableSelectionDialogue() {
 
-        println("Enter number table for action");
-        return null;
-    }
-
-    public static int selectTable(int number, int totalTables) {
-        int currentTable = 0;
-
-        currentTable = currentTable + number;
-
-            if (currentTable < 1 || currentTable > totalTables) {
-                System.out.println("There is no such table, you have only  "+totalTables);
-            } else {
-                System.out.println(" ");
-            }
-
-        return currentTable;
+        println("Enter table number for actions...");
 
     }
-     static  public void dialogOrder() {
-        System.out.println("Enter price follow by menu item name to add " +
-                "to table receipt, or p to print, qu to void");
-    }
 
+   public  static   void askActionOnTable() {
+      println("Enter price follow by menu item name to add " +
+                "to table receipt, x - clear, p to print, q - do noting ");
+      print("> ");
+  }
 
-
-
-    static public String makeOrder() throws IOException {
-        return reader.readLine();
-    }
+  public static void invalidFormat(){
+        println("Invalid format,enter in following format"+"\n[Number][Space][Item name]");
+  }
 
     static public void println(String line){
         System.out.println(line);
     }
-    static private void print(String line){
+    static public void print(String line){
         System.out.print(line);
     }
 
-    static private String readln() throws IOException {
+    static public String readln() throws IOException {
         return reader.readLine();
     }
-
 }

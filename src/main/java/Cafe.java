@@ -1,60 +1,98 @@
-import org.omg.PortableInterceptor.INACTIVE;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static helpers.ConsoleHelper.*;
 
-
 public class Cafe {
-
     static class Order {
         double price;
         String title;
-    }
 
-    private Map<Integer, List<Order>> cafeOrders = new HashMap<Integer, List<Order>>();
-
-    public void dialogQueryHowManyTableAreThere() throws IOException {
-        askHowManyTablesAreThere();
-
-        int numberOfTables = readNumber();
-        for (int i = 1; i <= numberOfTables; i++) {
-            cafeOrders.put(i, new ArrayList<Order>());
+        @Override
+        public String toString() {
+            return "Order{" +
+                    "price=" + price +
+                    ", title='" + title + '\'' +
+                    '}';
         }
 
-        println("Ok now we are  " + cafeOrders.size() + " tables");
+        Order(double price, String title) {
+            this.price = price;
+            this.title = title;
+        }
+    }
+    private Map<Integer, List<Order>> cafeOrders = new HashMap<>();
+
+    private void dialogQueryHowManyTableAreThere() throws IOException {
+        askHowManyTablesAreThere();
+        int numberOfTables = readNumber();
+        for (int i = 1; i <= numberOfTables; i++) {
+            cafeOrders.put(i, new ArrayList<>());
+        }
+        println("Ok, now we are  " + cafeOrders.size() + " tables.");
     }
 
-    public void mainActionLoop() {
+    private void mainActionLoop() throws IOException {
         while (true) {
-             Integer selectedTable = selectTable() ;
+            Integer selectedTable = selectTable();
             if (selectedTable == null) {
                 break;
             }
-            doActionOnTable(selectedTable) ;
+            doActionOnTable(selectedTable);
+        }
+    }
+    private void doActionOnTable(Integer selectedTable) throws IOException {
+
+        while (true) {
+            askActionOnTable();
+            String orderDescription = readln();
+            if (orderDescription.equals("x")) {
+                cafeOrders.get(selectedTable).clear();
+                break;
+            }
+            if (orderDescription.equals("p")) {
+                println("   Table " + selectedTable);
+                println("-------------");
+                double total = 0;
+                for (Order order : cafeOrders.get(selectedTable)) {
+                    println(order.title + "   " + order.price);
+                    total += order.price;
+                }
+                println("-----------");
+                println("Total   " + total);
+                break;
+            }
+            if (orderDescription.equals("q")) {
+                break;
+            }
+
+            if (orderDescription.matches("^([1-9][0-9]*[.]?[0-9]*) [A-z]*")) {
+                String[] orderStr = orderDescription.split(" ");
+                Order order = new Order(Double.parseDouble(orderStr[0]), orderStr[1]);
+                cafeOrders.get(selectedTable).add(order);
+                double total = 0;
+                int itemCount = 0;
+                for (Order o : cafeOrders.get(selectedTable)) {
+                    itemCount++;
+                    total += o.price;
+                }
+                println("Ok, table " + selectedTable + " has " + itemCount + " item total price " + total);
+                return;
+            } else {
+                invalidFormat();
+
+            }
         }
     }
 
-    /**
-     *
-     * 1. promts for action x - clear, p - print, q - do noting,  [number] [good name] to add to table orders
-     *
-     * @param selectedTable table for which actions are done
-     */
-    private void doActionOnTable(Integer selectedTable) {
-        // TODO
-    }
-
-    /**
-     *
-     * @return table number or null if q is selected
-     */
-    private Integer selectTable() {
-        return null; // TODO
+    private Integer selectTable() throws IOException {
+        tableSelectionDialogue();
+        int tableNumber = readNumber();
+        if (tableNumber > 0 && tableNumber <= cafeOrders.size()) {
+            return tableNumber;
+        }
+        System.out.println("There is no such table, you have only " + cafeOrders.size()+".");
+        return selectTable();
     }
 
     public static void main(String[] args) throws IOException {
